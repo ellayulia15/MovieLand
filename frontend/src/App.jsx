@@ -1,8 +1,16 @@
-export default function App() {
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import MovieDetail from './pages/MovieDetail';
+
+function App() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-900">
-      <h1 className="text-5xl font-bold text-primary-500 mb-4">🎬 MovieLand</h1>
-      <p className="text-lg text-gray-300 mb-8">Discover your next favorite movie!</p>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/movie/:id" element={<MovieDetail />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
+
+export default App;
