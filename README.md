@@ -52,6 +52,7 @@ Website ini dibuat sebagai bagian dari project assignment untuk melatih kemampua
 2. Masuk ke folder project
    ```bash
    cd MovieLand
+   cd frontend
 3. Install dependencies
    ```bash
    npm install
