@@ -2,6 +2,29 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState, useCallback } from 'react';
 import { getMovieById } from '../services/api';
 import Loader from '../components/Loader';
+import DefaultPoster from '../components/DefaultPoster';
+
+// Movie Poster Image Component with error handling
+function MoviePosterImage({ movie }) {
+    const [imageError, setImageError] = useState(false);
+
+    if (imageError) {
+        return (
+            <div className="relative w-full max-w-md mx-auto h-96 rounded-2xl shadow-2xl overflow-hidden transition-transform duration-300 group-hover:scale-105">
+                <DefaultPoster size="lg" className="rounded-2xl" />
+            </div>
+        );
+    }
+
+    return (
+        <img 
+            src={movie.Poster} 
+            alt={`${movie.Title} poster`}
+            className="relative w-full max-w-md mx-auto rounded-2xl shadow-2xl transition-transform duration-300 group-hover:scale-105"
+            onError={() => setImageError(true)}
+        />
+    );
+}
 
 export default function MovieDetail() {
     const { id } = useParams();
@@ -76,86 +99,130 @@ export default function MovieDetail() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-900 text-white">
-            <div className="container mx-auto px-4 py-8">
+        <div className="min-h-screen text-white relative overflow-hidden">
+            {/* Hero Background */}
+            <div className="absolute inset-0 overflow-hidden">
+                <div className="absolute top-20 right-10 w-32 h-32 bg-gradient-to-r from-primary-500/10 to-accent-500/10 rounded-full blur-2xl animate-float"></div>
+                <div className="absolute bottom-10 left-10 w-40 h-40 bg-gradient-to-r from-purple-500/10 to-primary-500/10 rounded-full blur-3xl animate-pulse-slow"></div>
+            </div>
+
+            <div className="relative z-10 container mx-auto px-4 py-8">
                 <button 
                     onClick={handleGoBack}
-                    className="mb-6 px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="mb-8 glass-dark px-6 py-3 text-white rounded-xl hover:bg-white/10 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary-400/50 flex items-center gap-2 font-medium"
                 >
-                    ← Back
+                    ← <span>Back to Movies</span>
                 </button>
                 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
                     <div className="lg:col-span-1">
-                        <img 
-                            src={movie.Poster !== 'N/A' ? movie.Poster : 'https://via.placeholder.com/400x600/1f2937/9ca3af?text=No+Image'} 
-                            alt={`${movie.Title} poster`}
-                            className="w-full max-w-md mx-auto rounded-lg shadow-xl"
-                        />
+                        <div className="relative group">
+                            <div className="absolute inset-0 bg-gradient-to-br from-primary-500/20 to-accent-500/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                            {movie.Poster === 'N/A' ? (
+                                <div className="relative w-full max-w-md mx-auto h-96 rounded-2xl shadow-2xl overflow-hidden transition-transform duration-300 group-hover:scale-105">
+                                    <DefaultPoster size="lg" className="rounded-2xl" />
+                                </div>
+                            ) : (
+                                <MoviePosterImage movie={movie} />
+                            )}
+                        </div>
                     </div>
                     
-                    <div className="lg:col-span-2 space-y-6">
-                        <header>
-                            <h1 className="text-4xl font-bold text-primary-400 mb-2">
+                    <div className="lg:col-span-2 space-y-8">
+                        <header className="glass-dark rounded-2xl p-8">
+                            <h1 className="font-display text-5xl md:text-6xl font-bold gradient-text mb-4 leading-tight">
                                 {movie.Title}
                             </h1>
-                            <div className="flex flex-wrap gap-4 text-gray-300 mb-4">
-                                <span className="bg-gray-800 px-3 py-1 rounded-full text-sm">{movie.Year}</span>
-                                <span className="bg-gray-800 px-3 py-1 rounded-full text-sm">{movie.Runtime}</span>
-                                <span className="bg-gray-800 px-3 py-1 rounded-full text-sm">{movie.Rated}</span>
+                            <div className="flex flex-wrap gap-3 mb-6">
+                                {movie.Year && movie.Year !== 'N/A' && (
+                                    <span className="glass px-4 py-2 rounded-full text-sm font-medium text-primary-400">{movie.Year}</span>
+                                )}
+                                {movie.Runtime && movie.Runtime !== 'N/A' && (
+                                    <span className="glass px-4 py-2 rounded-full text-sm font-medium text-accent-400">{movie.Runtime}</span>
+                                )}
+                                {movie.Rated && movie.Rated !== 'N/A' && (
+                                    <span className="glass px-4 py-2 rounded-full text-sm font-medium text-purple-400">{movie.Rated}</span>
+                                )}
                             </div>
-                            <p className="text-gray-400">{movie.Genre}</p>
+                            {movie.Genre && movie.Genre !== 'N/A' && (
+                                <p className="text-xl text-gray-300 font-medium">{movie.Genre}</p>
+                            )}
                         </header>
 
                         {movie.Plot && movie.Plot !== 'N/A' && (
-                            <section>
-                                <h2 className="text-xl font-semibold text-primary-400 mb-2">Plot</h2>
-                                <p className="text-gray-300 leading-relaxed">{movie.Plot}</p>
+                            <section className="glass-dark rounded-2xl p-8">
+                                <h2 className="text-2xl font-bold gradient-text mb-4 flex items-center gap-2">
+                                    📖 <span>Story</span>
+                                </h2>
+                                <p className="text-gray-300 leading-relaxed text-lg">{movie.Plot}</p>
                             </section>
                         )}
 
-                        <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {movie.Director && movie.Director !== 'N/A' && (
-                                <div>
-                                    <h3 className="font-semibold text-primary-400">Director</h3>
-                                    <p className="text-gray-300">{movie.Director}</p>
+                        {(movie.Director && movie.Director !== 'N/A') || 
+                         (movie.Writer && movie.Writer !== 'N/A') || 
+                         (movie.Actors && movie.Actors !== 'N/A') || 
+                         (movie.Language && movie.Language !== 'N/A') ? (
+                            <section className="glass-dark rounded-2xl p-8">
+                                <h2 className="text-2xl font-bold gradient-text mb-6 flex items-center gap-2">
+                                    👥 <span>Cast & Crew</span>
+                                </h2>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    {movie.Director && movie.Director !== 'N/A' && (
+                                        <div className="glass rounded-xl p-4">
+                                            <h3 className="font-bold text-primary-400 mb-2 flex items-center gap-2">
+                                                🎬 Director
+                                            </h3>
+                                            <p className="text-gray-300">{movie.Director}</p>
+                                        </div>
+                                    )}
+                                    
+                                    {movie.Writer && movie.Writer !== 'N/A' && (
+                                        <div className="glass rounded-xl p-4">
+                                            <h3 className="font-bold text-accent-400 mb-2 flex items-center gap-2">
+                                                ✍️ Writer
+                                            </h3>
+                                            <p className="text-gray-300">{movie.Writer}</p>
+                                        </div>
+                                    )}
+                                    
+                                    {movie.Actors && movie.Actors !== 'N/A' && (
+                                        <div className="glass rounded-xl p-4 md:col-span-2">
+                                            <h3 className="font-bold text-purple-400 mb-2 flex items-center gap-2">
+                                                🎭 Cast
+                                            </h3>
+                                            <p className="text-gray-300">{movie.Actors}</p>
+                                        </div>
+                                    )}
+                                    
+                                    {movie.Language && movie.Language !== 'N/A' && (
+                                        <div className="glass rounded-xl p-4">
+                                            <h3 className="font-bold text-yellow-400 mb-2 flex items-center gap-2">
+                                                🌍 Language
+                                            </h3>
+                                            <p className="text-gray-300">{movie.Language}</p>
+                                        </div>
+                                    )}
                                 </div>
-                            )}
-                            
-                            {movie.Writer && movie.Writer !== 'N/A' && (
-                                <div>
-                                    <h3 className="font-semibold text-primary-400">Writer</h3>
-                                    <p className="text-gray-300">{movie.Writer}</p>
-                                </div>
-                            )}
-                            
-                            {movie.Actors && movie.Actors !== 'N/A' && (
-                                <div>
-                                    <h3 className="font-semibold text-primary-400">Cast</h3>
-                                    <p className="text-gray-300">{movie.Actors}</p>
-                                </div>
-                            )}
-                            
-                            {movie.Language && movie.Language !== 'N/A' && (
-                                <div>
-                                    <h3 className="font-semibold text-primary-400">Language</h3>
-                                    <p className="text-gray-300">{movie.Language}</p>
-                                </div>
-                            )}
-                        </section>
+                            </section>
+                        ) : null}
 
-                        {(movie.imdbRating || movie.Metascore) && (
-                            <section>
-                                <h2 className="text-xl font-semibold text-primary-400 mb-3">Ratings</h2>
-                                <div className="flex gap-4">
+                        {((movie.imdbRating && movie.imdbRating !== 'N/A') || 
+                          (movie.Metascore && movie.Metascore !== 'N/A')) && (
+                            <section className="glass-dark rounded-2xl p-8">
+                                <h2 className="text-2xl font-bold gradient-text mb-6 flex items-center gap-2">
+                                    ⭐ <span>Ratings</span>
+                                </h2>
+                                <div className="flex flex-wrap gap-4">
                                     {movie.imdbRating && movie.imdbRating !== 'N/A' && (
-                                        <div className="bg-yellow-600 text-black px-3 py-2 rounded-lg font-semibold">
-                                            IMDb: {movie.imdbRating}/10
+                                        <div className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-black px-6 py-3 rounded-xl font-bold text-lg shadow-lg flex items-center gap-2">
+                                            <span>🎬</span>
+                                            <span>IMDb: {movie.imdbRating}/10</span>
                                         </div>
                                     )}
                                     {movie.Metascore && movie.Metascore !== 'N/A' && (
-                                        <div className="bg-green-600 text-white px-3 py-2 rounded-lg font-semibold">
-                                            Metacritic: {movie.Metascore}/100
+                                        <div className="bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-3 rounded-xl font-bold text-lg shadow-lg flex items-center gap-2">
+                                            <span>📊</span>
+                                            <span>Metacritic: {movie.Metascore}/100</span>
                                         </div>
                                     )}
                                 </div>
