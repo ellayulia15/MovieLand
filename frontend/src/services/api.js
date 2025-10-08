@@ -15,10 +15,11 @@ const apiClient = axios.create({
  * Search for movies by query
  * @param {string} query - Search term
  * @param {number} page - Page number (default: 1)
- * @param {string} type - Content type filter (movie, series, episode)
+ * @param {string} type - Content type filter (movie, series)
+ * @param {string} year - Year filter (optional)
  * @returns {Promise<Object>} API response
  */
-export async function searchMovies(query, page = 1, type = '') {
+export async function searchMovies(query, page = 1, type = '', year = '') {
     if (!query.trim()) {
         throw new Error('Search query is required');
     }
@@ -30,6 +31,10 @@ export async function searchMovies(query, page = 1, type = '') {
 
     if (type) {
         params.type = type;
+    }
+
+    if (year) {
+        params.y = year;
     }
 
     const { data } = await apiClient.get('', { params });
