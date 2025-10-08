@@ -12,7 +12,7 @@ Website ini dibuat sebagai bagian dari project assignment untuk melatih kemampua
 - **API:** [OMDb API](https://www.omdbapi.com/)  
 - **Features:**  
   - Search film dengan fitur **debounce**  
-  - Filter berdasarkan kategori  
+  - Filter berdasarkan kategori dan tahun rilis
   - **Infinite scroll** untuk load lebih banyak film  
   - **Responsive design** untuk tampilan mobile & desktop  
   - Halaman **detail movie** yang menampilkan informasi lengkap
@@ -22,7 +22,7 @@ Website ini dibuat sebagai bagian dari project assignment untuk melatih kemampua
 ## 🏠 Halaman Home
 - Menampilkan daftar film dengan thumbnail  
 - Pengguna dapat mencari film melalui search bar  
-- Dapat memfilter film berdasarkan kategori (misal: Action, Drama, Comedy, dsb)  
+- Dapat memfilter film berdasarkan kategori (misal: Movie, Series)  
 - Klik thumbnail untuk menuju halaman detail
 
 ---
@@ -64,10 +64,10 @@ Website ini dibuat sebagai bagian dari project assignment untuk melatih kemampua
 
 ## 🌐 Deploy
 Project ini dapat diakses melalui link berikut:
-👉 https://movie-land.vercel.app
+👉 https://movie-land-cahya.vercel.app
 
 ---
 
 ## 👩‍💻 Author
-Dibuat oleh Ella Yulia
+Dibuat oleh Ella Yulia Cahyani
 Sebagai bagian dari project assignment Movie Gallery Website.
