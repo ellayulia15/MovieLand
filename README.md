@@ -1,6 +1,6 @@
 # 🎬 MovieLand
 
-MovieLand adalah website galeri film yang menampilkan berbagai film populer dan memungkinkan pengguna untuk mencari serta memfilter film berdasarkan kategori.  
+MovieLand adalah website galeri film yang menampilkan berbagai film populer dan memungkinkan pengguna untuk mencari serta memfilter film berdasarkan tipe, tahun rilis, dan genre.  
 Website ini dibuat sebagai bagian dari project assignment untuk melatih kemampuan front-end development menggunakan API publik.
 
 ---
@@ -12,7 +12,7 @@ Website ini dibuat sebagai bagian dari project assignment untuk melatih kemampua
 - **API:** [OMDb API](https://www.omdbapi.com/)  
 - **Features:**  
   - Search film dengan fitur **debounce**  
-  - Filter berdasarkan kategori dan tahun rilis
+  - Filter berdasarkan tipe, tahun rilis, dan genre
   - **Infinite scroll** untuk load lebih banyak film  
   - **Responsive design** untuk tampilan mobile & desktop  
   - Halaman **detail movie** yang menampilkan informasi lengkap
@@ -22,7 +22,7 @@ Website ini dibuat sebagai bagian dari project assignment untuk melatih kemampua
 ## 🏠 Halaman Home
 - Menampilkan daftar film dengan thumbnail  
 - Pengguna dapat mencari film melalui search bar  
-- Dapat memfilter film berdasarkan kategori (misal: Movie, Series)  
+- Dapat memfilter film berdasarkan tipe (misal: Movie, Series), tahun rilis, dan genre (misal: Action, Drama, dll)  
 - Klik thumbnail untuk menuju halaman detail
 
 ---
@@ -32,8 +32,10 @@ Website ini dibuat sebagai bagian dari project assignment untuk melatih kemampua
   - Poster
   - Judul
   - Tahun rilis
+  - Durasi
   - Genre
   - Sinopsis
+  - Cast & Crew
   - Rating
 
 ---
