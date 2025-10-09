@@ -17,9 +17,10 @@ const apiClient = axios.create({
  * @param {number} page - Page number (default: 1)
  * @param {string} type - Content type filter (movie, series)
  * @param {string} year - Year filter (optional)
+ * @param {string} genre - Genre filter (optional)
  * @returns {Promise<Object>} API response
  */
-export async function searchMovies(query, page = 1, type = '', year = '') {
+export async function searchMovies(query, page = 1, type = '', year = '', genre = '') {
     if (!query.trim()) {
         throw new Error('Search query is required');
     }
@@ -38,6 +39,32 @@ export async function searchMovies(query, page = 1, type = '', year = '') {
     }
 
     const { data } = await apiClient.get('', { params });
+
+    // Filter by genre if specified
+    if (genre && data.Response === 'True' && data.Search) {
+        // Get detailed info for each movie to check its genre
+        const detailedMovies = await Promise.all(
+            data.Search.map(async movie => {
+                const details = await getMovieById(movie.imdbID);
+                return {
+                    ...movie,
+                    Genre: details.Genre
+                };
+            })
+        );
+
+        // Filter movies by genre
+        const filteredMovies = detailedMovies.filter(movie => 
+            movie.Genre && movie.Genre.toLowerCase().includes(genre.toLowerCase())
+        );
+
+        return {
+            ...data,
+            Search: filteredMovies,
+            totalResults: filteredMovies.length.toString()
+        };
+    }
+
     return data;
 }
 
