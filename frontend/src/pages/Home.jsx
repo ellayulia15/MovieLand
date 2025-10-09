@@ -8,6 +8,16 @@ export default function Home() {
     const [query, setQuery] = useState('');
     const [type, setType] = useState('');
     const [year, setYear] = useState('');
+    const [genre, setGenre] = useState('');
+
+    // Common movie genres
+    const genres = [
+        'Action', 'Adventure', 'Animation', 'Biography', 'Comedy',
+        'Crime', 'Documentary', 'Drama', 'Family', 'Fantasy',
+        'Film-Noir', 'History', 'Horror', 'Music', 'Musical',
+        'Mystery', 'Romance', 'Sci-Fi', 'Sport', 'Thriller',
+        'War', 'Western'
+    ];
     const [movies, setMovies] = useState([]);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
@@ -43,9 +53,10 @@ export default function Home() {
                 return `Found ${totalResults.toLocaleString()} results for "${currentQuery}"${yearText}`;
             }
         } else {
-            if (type || year) {
+            if (type || year || genre) {
                 const filterDesc = [
                     type ? typeText.toLowerCase() : 'movies',
+                    genre ? `in ${genre}` : '',
                     year ? `from ${year}` : ''
                 ].filter(Boolean).join(' ');
                 return `Showing ${filterDesc} (${totalResults.toLocaleString()} available)`;
@@ -64,7 +75,7 @@ export default function Home() {
         setLoading(false);
         setError(null);
         loadingRef.current = false;
-    }, [query, type, year]);
+    }, [query, type, year, genre]);
 
     const loadMovies = useCallback(async () => {
         if (loading || loadingRef.current) return;
@@ -74,7 +85,7 @@ export default function Home() {
         setError(null);
 
         try {
-            const response = await searchMovies(query.trim() || 'movie', page, type, year);
+            const response = await searchMovies(query.trim() || 'movie', page, type, year, genre);
 
             if (response.Response === 'True') {
                 const newMovies = response.Search || [];
@@ -234,9 +245,9 @@ export default function Home() {
                                         value={type}
                                         onChange={(e) => setType(e.target.value)}
                                         className="glass px-4 py-3 text-white border border-white/20 rounded-xl focus:outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-400/50 transition-all min-w-48"
-                                        aria-label="Filter by content type"
+                                        aria-label="Filter by type"
                                     >
-                                        <option value="" className="bg-gray-800">All Categories</option>
+                                        <option value="" className="bg-gray-800">All Types</option>
                                         <option value="movie" className="bg-gray-800">🎬 Movies</option>
                                         <option value="series" className="bg-gray-800">📺 TV Series</option>
                                     </select>
@@ -255,15 +266,31 @@ export default function Home() {
                                             </option>
                                         ))}
                                     </select>
+
+                                    {/* Genre Filter */}
+                                    <select
+                                        value={genre}
+                                        onChange={(e) => setGenre(e.target.value)}
+                                        className="glass px-4 py-3 text-white border border-white/20 rounded-xl focus:outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-400/50 transition-all min-w-48"
+                                        aria-label="Filter by genre"
+                                    >
+                                        <option value="" className="bg-gray-800">🎭 All Genres</option>
+                                        {genres.map(g => (
+                                            <option key={g} value={g} className="bg-gray-800">
+                                                {g}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
 
                                 {/* Clear Filters Button */}
-                                {(type || year) && (
+                                {(type || year || genre) && (
                                     <div className="flex justify-center">
                                         <button
                                             onClick={() => {
                                                 setType('');
                                                 setYear('');
+                                                setGenre('');
                                             }}
                                             className="glass px-4 py-2 text-sm text-white/80 hover:text-white border border-white/20 rounded-lg hover:bg-white/10 transition-all duration-200 flex items-center gap-2"
                                         >
